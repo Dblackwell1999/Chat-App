@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat App</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        body { font-family: Arial; background: #f0f0f0; padding: 20px;}
+        #messages { list-style: none; padding: 0; }
+        #messages li { padding: 5px 10px; margin-bottom: 5px; background: #fff; border-radius: 4px; }
+          input { padding: 10px; width: 80%; }
+        button { padding: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Simple Chat</h2>
+    <ul id="messages"></ul>
+    <input id="message" autocomplete="off" placeholder="Type message..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const socket = io();
+        const messages = document.getElementById('messages');
+        const input = document.getElementById('message');
+
+        //This line will ask for the username once
+        const username = prompt("Enter your username:");
+
+        socket.on('message', function(msg) {
+            const item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        function sendMessage() {
+            const msg = input.value;
+            socket.emit('message', {
+                username: username,
+                message: msg
+            });
+            input.value = '';
+        }
+
+        input.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
