@@ -1,4 +1,4 @@
-import requests
+teimport requests
 from flask import Flask, render_template
 from flask_socketio import SocketIO, send
 from datetime import datetime
@@ -53,7 +53,7 @@ def handle_message(data):
 
 # Weather command
 def get_weather(city):
-    api_key = "01cfb40a7976974071668f7957a63ab1"  # ✅ Put your own key here
+    api_key = "Enter Your Own API Here"  # ✅ Put your own key here
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
     try:
         response = requests.get(url)
