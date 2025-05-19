@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat App</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .chat-container {
+      max-width: 700px;
+      margin: 30px auto;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .chat-header {
+      padding: 15px;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-messages {
+      flex-grow: 1;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    .chat-footer {
+      display: flex;
+      border-top: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    /* Light Mode */
+    body.light {
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .light .chat-container {
+      background-color: white;
+    }
+
+    .light .chat-header {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .light .chat-footer {
+      background-color: #fafafa;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+
+    .dark .chat-container {
+      background-color: #1e1e1e;
+    }
+
+    .dark .chat-header {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .dark .chat-footer {
+      background-color: #2c2c2c;
+    }
+
+    .dark input[type="text"] {
+      background-color: #444;
+      color: #fff;
+      border: 1px solid #555;
+    }
+
+    .dark button {
+      background-color: #03dac6;
+      color: #000;
+    }
+
+    .dark button:hover {
+      background-color: #00bfa5;
+    }
+
+    .toggle-theme {
+      cursor: pointer;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body class="light">
+
+<div class="chat-container">
+  <div class="chat-header">
+    <span>ChatBot 🤖</span>
+    <span class="toggle-theme" onclick="toggleTheme()">🌓 Toggle Theme</span>
+  </div>
+  <div class="chat-messages" id="messages"></div>
+  <div class="chat-footer">
+    <input type="text" id="username" placeholder="Your name" />
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+</div>
+
+<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+<script>
+  const socket = io();
+  const messagesDiv = document.getElementById('messages');
+
+  socket.on('message', function(msg) {
+    const div = document.createElement('div');
+    div.textContent = msg;
+    messagesDiv.appendChild(div);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  });
+
+  function sendMessage() {
+    const username = document.getElementById('username').value.trim() || 'User';
+    const message = document.getElementById('message').value.trim();
+    if (message) {
+      socket.send({ username, message });
+      document.getElementById('message').value = '';
+    }
+  }
+
+  document.getElementById('message').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle('dark');
+    body.classList.toggle('light');
+    localStorage.setItem('theme', body.classList.contains('dark') ? 'dark' : 'light');
+  }
+
+  // Load saved theme on reload
+  window.onload = () => {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      document.body.classList.remove('light', 'dark');
+      document.body.classList.add(saved);
+    }
+  };
+</script>
+
+</body>
+</html>
