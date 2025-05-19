@@ -12,11 +12,11 @@ A real-time web-based chat application built with Flask, Socket.IO, and SQLite. 
 -  Live weather info using OpenWeatherMap API
 -  Math calculator with safe expression parsing
 -  Toggleable Dark Mode (optional UI feature)
-- 🗃 View past chat logs (`/logs` route)
+-  View past chat logs (`/logs` route)
 
 ---
 
-## 🖥 Demo
+## Demo
 
 > Local demo instructions below. Optional: Deploy to Render, Vercel, or Replit for live showcase.
 
